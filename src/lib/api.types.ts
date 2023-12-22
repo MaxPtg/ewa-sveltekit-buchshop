@@ -1,3 +1,5 @@
+/* =================== AUTH =================== */
+
 export interface User {
 	id: number;
 	username: string;
@@ -13,8 +15,34 @@ export interface User {
 	createdAt: string;
 	updatedAt: string;
 }
-
 export interface AuthenticatedUser {
 	jwt: string;
 	user: User;
 }
+
+/* =================== BOOKS =================== */
+
+export type Book = {
+	id: number;
+	attributes: {
+		title: string;
+		author: string;
+		abstract: string;
+		quantity: number;
+		price: number;
+		cover_url: string | null;
+		isbn: string | null;
+		createdAt: string;
+		updatedAt: string;
+		publishedAt: string;
+	};
+};
+export type Books = Book[];
+
+/* =================== SHOPPING CART =================== */
+
+export type CartItem = {
+	book_id: number;
+	book_attributes: Book['attributes'];
+	quantity: number;
+};

@@ -2,9 +2,12 @@
 	import { enhance } from '$app/forms';
 	import { goto, invalidateAll } from '$app/navigation';
 	import type { LayoutData } from './$types';
+	import { page } from "$app/stores";
 
 	export let data: LayoutData;
 	$: authenticatedUser = data.authenticatedUser;
+
+	$: currentPath = $page.url.pathname;
 </script>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
@@ -29,21 +32,27 @@
 
 				<!-- Navbar Items -->
 				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="/">Katalog</a>
+					<a class="nav-link" class:active={currentPath === "/"} aria-current="page" href="/">
+						<i class="fas fa-book"></i> Katalog
+					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="/shopping-cart">Warenkorb</a>
+					<a class="nav-link" class:active={currentPath.includes("shopping-cart")} href="/shopping-cart">
+						<i class="fas fa-shopping-cart"></i> Warenkorb
+					</a>
 				</li>
 
 				{#if !authenticatedUser}
 					<li class="nav-item">
-						<a class="nav-link" href="/login">Anmelden</a>
+						<a class="nav-link" class:active={currentPath.includes("login")} href="/login">
+							<i class="fas fa-user"></i> Anmelden
+						</a>
 					</li>
 				{:else}
 
 					{#if authenticatedUser.user.bookstore_role === 'ADMIN'}
 						<li class="nav-item">
-							<a class="nav-link" href="/admin">Administration</a>
+							<a class="nav-link" class:active={currentPath.includes("admin")} href="/admin">Administration</a>
 						</li>
 					{/if}
 
@@ -79,7 +88,9 @@
 					placeholder="Suchen ..."
 					aria-label="Search"
 				/>
-				<button class="btn btn-outline-success" type="submit">Suchen</button>
+				<button class="btn btn-outline-success" type="submit">
+					Suchen
+				</button>
 			</form>
 
 		</div>
@@ -87,14 +98,3 @@
 </nav>
 
 <slot />
-
-<style>
-	button.nav-link {
-		background: none;
-		color: inherit;
-		border: none;
-		font: inherit;
-		cursor: pointer;
-		outline: inherit;
-	}
-</style>

@@ -54,12 +54,28 @@ export async function getBooks() {
 		}
 
 		const books = response.data?.data;
-		console.log('books', books);
 
-		//log(`API => successfully fetched todo-lists.`);
 		return { success: true, books };
 	} catch (error) {
 		log(`API => Error fetching bookstore-books: Unknown Error`);
+		throw new Error(String(error));
+	}
+}
+
+export async function getBook(id: number) {
+	try {
+		const response = await axios.get(`${baseURL}/bookstore-books/${id}`, { headers });
+
+		if (response.status !== 200) {
+			log(`API => Error fetching bookstore-book with id ${id}: Bad Request`);
+			throw new Error(response.data?.error);
+		}
+
+		const book = response.data?.data;
+	
+		return { success: true, book };
+	} catch (error) {
+		log(`API => Error fetching bookstore-book with id ${id}: Unknown Error`);
 		throw new Error(String(error));
 	}
 }

@@ -1,8 +1,9 @@
 
-import type { LayoutServerLoad } from './$types';
+import { getBook } from '$lib/api';
+import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {
-    const bookId = params.id;
-    console.log("bookId", bookId);
-    return { success: true, bookId: bookId }
-}) satisfies LayoutServerLoad;
+    const bookId = parseInt(params.id);
+    const book = await getBook(bookId);
+    return { success: true, book }
+}) satisfies PageServerLoad;

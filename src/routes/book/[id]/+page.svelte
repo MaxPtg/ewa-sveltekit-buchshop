@@ -1,16 +1,6 @@
 <script>
-	let book = {
-		id: 19,
-		attributes: {
-			title: 'Pride and Prejudice',
-			author: 'Jane Austen',
-			abstract:
-				'A classic novel about love, marriage, and societal expectations in 19th-century England.',
-			price: 8.99,
-			quantity: 8,
-			isbn: '978-0-14-143951-8'
-		}
-	};
+	export let data;
+	$: book = data.book.book;
 </script>
 
 <div class="container">
