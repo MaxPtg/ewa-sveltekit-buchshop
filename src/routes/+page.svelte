@@ -1,11 +1,22 @@
 <script>
 	import BookCard from '$lib/components/BookCard.svelte';
-	
+	import SlideLeftRight from '$lib/components/transitions/SlideLeftRight.svelte';
+
 	export let data;
 	$: books = data.books.books;
 </script>
 
-<main class="container">
+<svelte:head>
+	<title>Katalog | Books4You</title>
+</svelte:head>
+
+<SlideLeftRight>
+	<div class="row">
+		<div class="col-12 mb-5">
+			<h1><i class="fas fa-book"></i> Unser Katalog</h1>
+		</div>
+	</div>
+
 	<div class="row">
 		{#each books as book}
 			<div class="col-md-3 p-2">
@@ -13,4 +24,4 @@
 			</div>
 		{/each}
 	</div>
-</main>
+</SlideLeftRight>

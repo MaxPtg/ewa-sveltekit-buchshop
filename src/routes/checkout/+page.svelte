@@ -6,13 +6,13 @@
 </script>
 
 <svelte:head>
-	<title>Administration | Books4You</title>
+	<title>Kasse | Books4You</title>
 </svelte:head>
 
 <SlideLeftRight>
 	<div class="row">
 		<div class="col-12 mb-5">
-			<h1><i class="fa-solid fa-screwdriver-wrench"></i> Administration</h1>
+			<h1><i class="fa-solid fa-money-check-dollar"></i> Kasse</h1>
 		</div>
 	</div>
 </SlideLeftRight>

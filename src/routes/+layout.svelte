@@ -45,14 +45,16 @@
 				{#if !authenticatedUser}
 					<li class="nav-item">
 						<a class="nav-link" class:active={currentPath.includes("login")} href="/login">
-							<i class="fas fa-user"></i> Anmelden
+							<i class="fa-solid fa-right-to-bracket"></i> Anmelden
 						</a>
 					</li>
 				{:else}
 
 					{#if authenticatedUser.user.bookstore_role === 'ADMIN'}
 						<li class="nav-item">
-							<a class="nav-link" class:active={currentPath.includes("admin")} href="/admin">Administration</a>
+							<a class="nav-link" class:active={currentPath.includes("admin")} href="/admin">
+								<i class="fa-solid fa-screwdriver-wrench"></i> Administration
+							</a>
 						</li>
 					{/if}
 
@@ -67,7 +69,9 @@
 								};
 							}}
 						>
-							<button type="submit" class="nav-link">Abmelden</button>
+							<button type="submit" class="nav-link">
+								<i class="fa-solid fa-right-from-bracket"></i> Abmelden
+							</button>
 						</form>
 					</li>
 					
@@ -97,4 +101,6 @@
 	</div>
 </nav>
 
-<slot />
+<main class="container">
+	<slot />
+</main>
