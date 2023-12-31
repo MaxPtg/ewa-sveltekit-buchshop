@@ -1,0 +1,88 @@
+<script lang="ts">
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+	import { getBooks, updateBookQuantity } from '$lib/api';
+	import type { Book } from '$lib/api.types';
+
+	let books: Book[] = [];
+
+	onMount(async () => {
+		const response = await getBooks();
+		if (response.success) {
+			books = response.books;
+		}
+	});
+
+	let editingBook: Book | null = null;
+	let editedQuantity = 0;
+
+	function editBook(book: Book) {
+        // enter editing mode
+		editingBook = book;
+		editedQuantity = book.attributes.quantity;
+	}
+
+	async function saveChanges() {
+		if (editingBook) {
+			await updateBookQuantity(editingBook.id, editedQuantity);
+
+			const updatedBooks = books.map((book) => {
+				if (book.id === editingBook?.id) {
+					return { ...book, attributes: { ...book.attributes, quantity: editedQuantity } };
+				}
+				return book;
+			});
+			books = updatedBooks;
+
+			// exit editing mode
+			editingBook = null;
+		}
+	}
+
+	function navigateToAdmin() {
+		goto('/admin');
+	}
+</script>
+
+<svelte:head>
+	<title>Lagerbestand | Books4You</title>
+</svelte:head>
+
+<div class="container">
+	<button class="btn btn-secondary mt-3" on:click={navigateToAdmin}
+		>Zurück zur Administration</button
+	>
+	<h1>Lagerbestand</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Buchtitel</th>
+				<th>ISBN</th>
+				<th>Quantität</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each books as book}
+				<tr>
+					<td>{book.attributes.title}</td>
+					<td>{book.attributes.isbn}</td>
+					<td>
+						{#if editingBook === book} <!-- editing mode -->
+							<input type="number" bind:value={editedQuantity} />
+						{:else}
+							{book.attributes.quantity}
+						{/if}
+					</td>
+					<td>
+						{#if editingBook === book} <!-- editing mode -->
+							<button class="btn btn-primary" on:click={saveChanges}>Speichern</button>
+						{:else}
+							<button class="btn btn-secondary" on:click={() => editBook(book)}>Bearbeiten</button>
+						{/if}
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>

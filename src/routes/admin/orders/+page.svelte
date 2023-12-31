@@ -44,7 +44,7 @@
 </svelte:head>
 
 <div class="container">
-	<button class="btn btn-primary mt-3" on:click={navigateToAdmin}>Zurück zur Administration</button>
+	<button class="btn btn-secondary mt-3" on:click={navigateToAdmin}>Zurück zur Administration</button>
 	<h1>Bestellungen</h1>
 	{#if orders.length > 0}
 		<table class="table">
@@ -63,7 +63,7 @@
 						<td>{order.attributes.status}</td>
 						<td>{new Date(order.attributes.createdAt).toLocaleString()}</td>
 						<td>
-							<button class="btn btn-primary" on:click={() => toggleDetails(order.id)}
+							<button class="btn btn-secondary" on:click={() => toggleDetails(order.id)}
 								>Details</button
 							>
 						</td>
