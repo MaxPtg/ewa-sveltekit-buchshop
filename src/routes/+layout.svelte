@@ -8,6 +8,18 @@
 	$: authenticatedUser = data.authenticatedUser;
 
 	$: currentPath = $page.url.pathname;
+
+    function handleSearchSubmit(event: { preventDefault: () => void; }) {
+        event.preventDefault();
+        const searchInput = document.querySelector('[type="search"]');
+
+        if (searchInput instanceof HTMLInputElement) {
+            const searchTerm = searchInput.value;
+            goto(`/search?q=${encodeURIComponent(searchTerm)}`);
+        } else {
+            console.error('Suchfeld nicht gefunden');
+        }
+	}
 </script>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
@@ -80,7 +92,7 @@
 			</ul>
 
 			<!-- Search Form -->
-			<form class="d-flex">
+			<form class="d-flex" on:submit={handleSearchSubmit}>
 				{#if authenticatedUser}
 					<span class="navbar-text">
 						{authenticatedUser.user.username}&nbsp;&nbsp;&nbsp;
