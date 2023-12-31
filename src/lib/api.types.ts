@@ -46,3 +46,23 @@ export type CartItem = {
 	book_attributes: Book['attributes'];
 	quantity: number;
 };
+
+/* =================== ORDERS =================== */
+
+export type Order = {
+    detailsVisible: boolean;
+    id: number;
+    attributes: {
+        status: string;
+        createdAt: string;
+        updatedAt: string;
+        order_items: OrderItem[];
+    };
+};
+
+export type OrderItem = {
+    book: Book;
+    quantity: number;
+};
+
+export type Orders = Order[];
