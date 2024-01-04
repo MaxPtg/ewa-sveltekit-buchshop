@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { getOrders, getOrderDetails } from '$lib/api';
+	import { getOrders, getOrderDetails } from '$lib/api.server';
 	import type { Orders } from '$lib/api.types';
 
 	let orders: Orders = [];
@@ -17,7 +17,7 @@
 
 	async function loadOrderDetails(orderId: number) {
 		const response = await getOrderDetails(orderId);
-		if (response.success) {
+		if (response?.success) {
 			// TO DO
 		}
 	}

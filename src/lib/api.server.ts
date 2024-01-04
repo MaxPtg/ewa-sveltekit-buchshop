@@ -1,12 +1,12 @@
 import axios, {  AxiosError } from 'axios';
-import { PUBLIC_STRAPI_API_TOKEN } from '$env/static/public';
+import { SECRET_STRAPI_API_TOKEN } from '$env/static/private';
 import { log } from '$lib/util';
 
 
 const baseURL: string = 'http://127.0.0.1:1337/api';
 
 const headers = {
-	Authorization: `Bearer ${PUBLIC_STRAPI_API_TOKEN}`,
+	Authorization: `Bearer ${SECRET_STRAPI_API_TOKEN}`,
 	'Content-Type': 'application/json'
 };
 

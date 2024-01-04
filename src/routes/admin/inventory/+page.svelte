@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { getBooks, updateBookQuantity } from '$lib/api';
+	import { getBooks, updateBookQuantity } from '$lib/api.server';
 	import type { Book } from '$lib/api.types';
 
 	let books: Book[] = [];
