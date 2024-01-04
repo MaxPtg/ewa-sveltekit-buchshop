@@ -1,0 +1,1 @@
+<h1>Zahlung erfolgreich, vielen Dank!</h1>

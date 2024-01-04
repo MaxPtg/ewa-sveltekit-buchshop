@@ -2,6 +2,25 @@
     import SlideLeftRight from '$lib/components/transitions/SlideLeftRight.svelte';
     import type { PageData } from './$types';
 
+    //import {stripe} from '../stripe';
+    //import {env} from '$env/dynamic/private'
+    import { cartStore } from '$lib/store';
+	import type { CartItem } from '$lib/api.types';
+	import { onMount } from 'svelte';
+	import { log } from '$lib/util';
+
+	let cartItems: CartItem[] = [];
+
+	onMount(() => {
+		// Load cart from localStorage
+		const savedCart = localStorage.shoppingCart;
+		if (savedCart && savedCart.length > 0 && savedCart !== 'undefined') {
+			cartItems = JSON.parse(savedCart);
+			cartStore.set(cartItems);
+		}
+	});
+
+
     export let data: PageData;
 
     let formData = {
@@ -46,7 +65,27 @@ function validateFormData() {
         if (validateFormData()) {
             // TODO: stripe logic
             console.log('Formulardaten:', formData);
+
+            // log('checkout', {
+            //     cart: cartItems,
+            //     formData
+            // });
+
+            checkout();
         }
+    }
+
+    async function checkout() {
+        const data = await fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                items: cartItems,
+            })
+        }).then((data) => data.json());
+        window.location.replace(data.url);
     }
 
 	const countries = ['Deutschland', 'Österreich', 'Schweiz' ];
