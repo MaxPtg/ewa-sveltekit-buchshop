@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { derived } from 'svelte/store';
-	import { getBooks } from '$lib/api.server';
+	import { getBooks } from '$lib/api';
 	import type { Books, Book } from '$lib/api.types';
 	import BookCard from '$lib/components/BookCard.svelte';
 	import SlideLeftRight from '$lib/components/transitions/SlideLeftRight.svelte';

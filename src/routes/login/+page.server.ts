@@ -2,7 +2,7 @@ import { fail, type Actions, redirect } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 
 import { authStore } from '$lib/store';
-import { authLogin } from '$lib/api.server';
+import { authLogin } from '$lib/api';
 import { log } from '$lib/util';
 
 export const load = async () => {

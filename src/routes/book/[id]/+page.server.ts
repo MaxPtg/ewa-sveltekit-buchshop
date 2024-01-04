@@ -1,5 +1,5 @@
 
-import { getBook } from '$lib/api.server';
+import { getBook } from '$lib/api';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {

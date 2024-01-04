@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { getOrders, getOrderDetails } from '$lib/api.server';
+	import { getOrders, getOrderDetails } from '$lib/api';
 	import type { Orders } from '$lib/api.types';
 
 	let orders: Orders = [];

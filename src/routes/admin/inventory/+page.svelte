@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { getBooks, updateBookQuantity } from '$lib/api.server';
+	import type { PageData } from './$types';
 	import type { Book } from '$lib/api.types';
+	import { updateBookQuantity } from '$lib/api';
 
+	
+	export let data: PageData;
 	let books: Book[] = [];
-
-	onMount(async () => {
-		const response = await getBooks();
-		if (response.success) {
-			books = response.books;
-		}
-	});
+	$: books = data.books;
 
 	let editingBook: Book | null = null;
 	let editedQuantity = 0;
