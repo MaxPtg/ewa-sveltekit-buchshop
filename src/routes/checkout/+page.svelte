@@ -1,11 +1,9 @@
 <script lang="ts">
 	import SlideLeftRight from '$lib/components/transitions/SlideLeftRight.svelte';
-	import type { PageData } from './$types';
 
 	import { cartStore } from '$lib/store';
 	import type { CartItem } from '$lib/api.types';
 	import { onMount } from 'svelte';
-	import { log } from '$lib/util';
 
 	let cartItems: CartItem[] = [];
 
@@ -17,60 +15,6 @@
 			cartStore.set(cartItems);
 		}
 	});
-
-	export let data: PageData;
-
-	let formData = {
-		email: '',
-		address: '',
-		zipcode: '',
-		city: '',
-		country: ''
-	};
-
-	let errorMessages = {
-		email: '',
-		address: '',
-		zipcode: '',
-		city: '',
-		country: ''
-	};
-
-	function validateField(field: keyof typeof formData) {
-		if (!formData[field]) {
-			errorMessages[field] = 'Dieses Feld darf nicht leer sein';
-			return false;
-		} else {
-			errorMessages[field] = '';
-			return true;
-		}
-	}
-
-	function validateFormData() {
-		let isValid = true;
-
-		isValid = validateField('email') && isValid;
-		isValid = validateField('address') && isValid;
-		isValid = validateField('zipcode') && isValid;
-		isValid = validateField('city') && isValid;
-		isValid = validateField('country') && isValid;
-
-		return isValid;
-	}
-
-	function handleSubmit() {
-		if (validateFormData()) {
-			// TODO: stripe logic
-			console.log('Formulardaten:', formData);
-
-			// log('checkout', {
-			//     cart: cartItems,
-			//     formData
-			// });
-
-			checkout();
-		}
-	}
 
 	async function checkout() {
 		const data = await fetch('/checkout', {
@@ -96,9 +40,7 @@
 	}
 
 	let isAgbAccepted = false;
-
 	let showAgbModal = false;
-
 	function toggleAgbModal() {
 		showAgbModal = !showAgbModal;
 	}
@@ -113,7 +55,7 @@
 <SlideLeftRight>
 	<div class="row">
 		<div class="col-12 mb-5">
-			<h1><i class="fa-solid fa-money-check-dollar"></i> Zusammenfassung</h1>
+			<h1><i class="fa-solid fa-money-check-dollar"></i> Zusammenfassung deiner Bestellung</h1>
 
 			<div class="row">
 				<table class="table">
@@ -150,7 +92,7 @@
 				</table>
 			</div>
 
-			<div class="row">
+			<div class="row mb-3">
 				<label>
 					<input type="checkbox" bind:checked={isAgbAccepted} />
 					Ich akzeptiere die
@@ -159,28 +101,40 @@
 			</div>
 
 			{#if showAgbModal}
-			<div class="agb-modal-overlay">
-				<div class="agb-modal-content">
-					<h2>Allgemeinen Geschäftsbedingungen</h2>
-					<div class="agb-text-container">
-						<p>
-							Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-						</p>
+				<div class="agb-modal-overlay">
+					<div class="agb-modal-content">
+						<h2>Allgemeinen Geschäftsbedingungen</h2>
+						<div class="agb-text-container">
+							<p>
+								Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+								tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero
+								eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+								takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+								consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+								dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
+								dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+								ipsum dolor sit amet.
+							</p>
+						</div>
+						<button class="btn btn-secondary mb-3 w-100" on:click={toggleAgbModal}>
+							<i class="fa-solid fa-xmark"></i> Schließen
+						</button>
 					</div>
-					<button on:click={toggleAgbModal}>Schließen</button>
 				</div>
-			</div>
 			{/if}
 
 			<div class="row">
-				<a
-					href="/checkout"
-					class="btn btn-primary w-100"
-					class:disabled={!isAgbAccepted || totalQuantity === 0}
-				>
-					<i class="fa-solid fa-money-check-dollar"></i> Weiter zur Bezahlung (Stripe)
-				</a>
+				<form on:submit|preventDefault={checkout}>
+					<button
+						type="submit"
+						class="btn btn-primary w-100"
+						disabled={!isAgbAccepted || totalQuantity === 0}
+					>
+						<i class="fa-solid fa-money-check-dollar"></i> Weiter zur Bezahlung (Stripe)
+					</button>
+				</form>
 			</div>
+
 		</div>
 	</div>
 </SlideLeftRight>
