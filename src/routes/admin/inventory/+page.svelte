@@ -3,8 +3,8 @@
 	import type { PageData } from './$types';
 	import type { Book } from '$lib/api.types';
 	import { updateBookQuantity } from '$lib/api';
+	import SlideLeftRight from '$lib/components/transitions/SlideLeftRight.svelte';
 
-	
 	export let data: PageData;
 	let books: Book[] = [];
 	$: books = data.books;
@@ -13,7 +13,7 @@
 	let editedQuantity = 0;
 
 	function editBook(book: Book) {
-        // enter editing mode
+		// enter editing mode
 		editingBook = book;
 		editedQuantity = book.attributes.quantity;
 	}
@@ -44,42 +44,44 @@
 	<title>Lagerbestand | Books4You</title>
 </svelte:head>
 
-<div class="container">
-	<button class="btn btn-secondary mt-3" on:click={navigateToAdmin}
-		>Zurück zur Administration</button
-	>
-	<h1>Lagerbestand</h1>
+<SlideLeftRight>
+	<div class="container">
+		<h1>Lagerbestand</h1>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Buchtitel</th>
-				<th>ISBN</th>
-				<th>Quantität</th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			{#each books as book}
+		<table class="table">
+			<thead>
 				<tr>
-					<td>{book.attributes.title}</td>
-					<td>{book.attributes.isbn}</td>
-					<td>
-						{#if editingBook === book} <!-- editing mode -->
-							<input type="number" bind:value={editedQuantity} />
-						{:else}
-							{book.attributes.quantity}
-						{/if}
-					</td>
-					<td>
-						{#if editingBook === book} <!-- editing mode -->
-							<button class="btn btn-primary" on:click={saveChanges}>Speichern</button>
-						{:else}
-							<button class="btn btn-secondary" on:click={() => editBook(book)}>Bearbeiten</button>
-						{/if}
-					</td>
+					<th>Buchtitel</th>
+					<th>ISBN</th>
+					<th>Quantität</th>
+					<th></th>
 				</tr>
-			{/each}
-		</tbody>
-	</table>
-</div>
+			</thead>
+			<tbody>
+				{#each books as book}
+					<tr>
+						<td>{book.attributes.title}</td>
+						<td>{book.attributes.isbn}</td>
+						<td>
+							{#if editingBook === book}
+								<!-- editing mode -->
+								<input type="number" bind:value={editedQuantity} />
+							{:else}
+								{book.attributes.quantity}
+							{/if}
+						</td>
+						<td>
+							{#if editingBook === book}
+								<!-- editing mode -->
+								<button class="btn btn-primary" on:click={saveChanges}>Speichern</button>
+							{:else}
+								<button class="btn btn-secondary" on:click={() => editBook(book)}>Bearbeiten</button
+								>
+							{/if}
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
+</SlideLeftRight>

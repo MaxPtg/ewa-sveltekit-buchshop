@@ -6,6 +6,8 @@
 	import { onMount } from 'svelte';
 
 	let cartItems: CartItem[] = [];
+	let quantityError: boolean = false;
+	let quantityErrorText: string;
 
 	onMount(() => {
 		// Load cart from localStorage
@@ -26,6 +28,18 @@
 				items: cartItems
 			})
 		}).then((data) => data.json());
+
+		if (data && !data.success && data.books.length > 0) {
+			const bookList = data.books.join(', ');
+			quantityErrorText =
+				data.books.length === 1
+					? `Das Buch mit der Nummer ${bookList} ist nicht mehr in dieser Anzahl verfügbar.`
+					: `Die Bücher mit den Nummern ${bookList} sind nicht in dieser Anzahl mehr verfügbar.`;
+			quantityError = true;
+			return;
+		}
+		quantityError = false;
+
 		window.location.replace(data.url);
 	}
 
@@ -44,8 +58,6 @@
 	function toggleAgbModal() {
 		showAgbModal = !showAgbModal;
 	}
-
-	const countries = ['Deutschland', 'Österreich', 'Schweiz'];
 </script>
 
 <svelte:head>
@@ -77,16 +89,15 @@
 								<td>{item.book_attributes.author}</td>
 								<td>{item.book_attributes.price} €</td>
 								<td>{item.quantity}</td>
-								<td></td>
 							</tr>
 						{/each}
 					</tbody>
 					<tfoot>
 						<tr class="table-row">
 							<td></td>
-							<td colspan="3"><b>Gesamt</b></td>
-							<td>{totalQuantity}</td>
-							<td>{totalPrice.toFixed(2)} €</td>
+							<td colspan="2"><b>Gesamt</b></td>
+							<td><b>{totalPrice.toFixed(2)} €</b></td>
+							<td><b>{totalQuantity}</b></td>
 						</tr>
 					</tfoot>
 				</table>
@@ -123,6 +134,15 @@
 				</div>
 			{/if}
 
+			{#if quantityError}
+				<div class="alert alert-warning text-center" role="alert">
+					{quantityErrorText}
+				</div>
+				<a class="btn btn-secondary w-100 mb-3" href="/shopping-cart">
+					<i class="fa-solid fa-arrow-rotate-left"></i> Zurück zum Warenkorb
+				</a>
+			{/if}
+
 			<div class="row">
 				<form on:submit|preventDefault={checkout}>
 					<button
@@ -134,7 +154,6 @@
 					</button>
 				</form>
 			</div>
-
 		</div>
 	</div>
 </SlideLeftRight>
