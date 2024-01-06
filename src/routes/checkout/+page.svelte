@@ -85,62 +85,102 @@
 		window.location.replace(data.url);
 	}
 
+	let totalQuantity: number;
+	let totalPrice: number;
+	$: {
+		totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+		totalPrice = cartItems.reduce(
+			(total, item) => total + item.quantity * item.book_attributes.price,
+			0
+		);
+	}
+
+	let isAgbAccepted = false;
+
+	let showAgbModal = false;
+
+	function toggleAgbModal() {
+		showAgbModal = !showAgbModal;
+	}
+
 	const countries = ['Deutschland', 'Österreich', 'Schweiz'];
 </script>
 
 <svelte:head>
-	<title>Kasse | Books4You</title>
+	<title>Zusammenfassung | Books4You</title>
 </svelte:head>
 
 <SlideLeftRight>
 	<div class="row">
 		<div class="col-12 mb-5">
-			<h1><i class="fa-solid fa-money-check-dollar"></i> Kasse</h1>
-			<form on:submit|preventDefault={handleSubmit}>
-				<div class="mb-3">
-					<label for="email" class="form-label">Email*</label>
-					<input type="email" class="form-control" id="email" bind:value={formData.email} />
-					{#if errorMessages.email}
-						<div class="text-danger">{errorMessages.email}</div>
-					{/if}
-				</div>
-				<div class="mb-3">
-					<label for="address" class="form-label">Adresse*</label>
-					<input type="text" class="form-control" id="address" bind:value={formData.address} />
-					{#if errorMessages.address}
-						<div class="text-danger">{errorMessages.address}</div>
-					{/if}
-				</div>
-				<div class="mb-3">
-					<label for="zipcode" class="form-label">PLZ*</label>
-					<input type="text" class="form-control" id="zipcode" bind:value={formData.zipcode} />
-					{#if errorMessages.zipcode}
-						<div class="text-danger">{errorMessages.zipcode}</div>
-					{/if}
-				</div>
-				<div class="mb-3">
-					<label for="city" class="form-label">Stadt*</label>
-					<input type="text" class="form-control" id="city" bind:value={formData.city} />
-					{#if errorMessages.city}
-						<div class="text-danger">{errorMessages.city}</div>
-					{/if}
-				</div>
-				<div class="mb-3">
-					<label for="country" class="form-label">Land*</label>
-					<select class="form-control" id="country" bind:value={formData.country}>
-						<option value="">Wählen Sie ein Land</option>
-						{#each countries as country}
-							<option value={country}>{country}</option>
+			<h1><i class="fa-solid fa-money-check-dollar"></i> Zusammenfassung</h1>
+
+			<div class="row">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">Titel</th>
+							<th scope="col">Autor</th>
+							<th scope="col">Preis</th>
+							<th scope="col">Anzahl</th>
+							<th scope="col"></th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each cartItems as item (item.book_id)}
+							<tr class="table-row">
+								<th scope="row">{item.book_id}</th>
+								<td>{item.book_attributes.title}</td>
+								<td>{item.book_attributes.author}</td>
+								<td>{item.book_attributes.price} €</td>
+								<td>{item.quantity}</td>
+								<td></td>
+							</tr>
 						{/each}
-					</select>
-					{#if errorMessages.country}
-						<div class="text-danger">{errorMessages.country}</div>
-					{/if}
+					</tbody>
+					<tfoot>
+						<tr class="table-row">
+							<td></td>
+							<td colspan="3"><b>Gesamt</b></td>
+							<td>{totalQuantity}</td>
+							<td>{totalPrice.toFixed(2)} €</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+
+			<div class="row">
+				<label>
+					<input type="checkbox" bind:checked={isAgbAccepted} />
+					Ich akzeptiere die
+					<a href="#" on:click|preventDefault={toggleAgbModal}>Allgemeinen Geschäftsbedingungen</a>
+				</label>
+			</div>
+
+			{#if showAgbModal}
+			<div class="agb-modal-overlay">
+				<div class="agb-modal-content">
+					<h2>Allgemeinen Geschäftsbedingungen</h2>
+					<div class="agb-text-container">
+						<p>
+							Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+						</p>
+					</div>
+					<button on:click={toggleAgbModal}>Schließen</button>
 				</div>
-				<button type="submit" class="btn btn-primary w-100 mb-3">
-					<i class="fa-solid fa-right-to-bracket"></i> Weiter zur Bezahlung
-				</button>
-			</form>
+			</div>
+			{/if}
+
+			<div class="row">
+				<a
+					href="/checkout"
+					class="btn btn-primary w-100"
+					class:disabled={!isAgbAccepted || totalQuantity === 0}
+				>
+					<i class="fa-solid fa-money-check-dollar"></i> Weiter zur Bezahlung (Stripe)
+				</a>
+			</div>
 		</div>
 	</div>
 </SlideLeftRight>

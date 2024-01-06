@@ -56,6 +56,7 @@
 				<th>Buchtitel</th>
 				<th>ISBN</th>
 				<th>Quantität</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>

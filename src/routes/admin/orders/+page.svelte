@@ -17,13 +17,23 @@
 
 	async function loadOrderDetails(orderId: number) {
 		const response = await getOrderDetails(orderId);
+		console.log('API response for order details:', response);
 		if (response?.success) {
-			// TO DO
+			const orderDetails = response.data;
+			console.log('Extracted order details:', orderDetails);
+			orders = orders.map((order) => {
+				if (order.id === orderId) {
+					return { ...order, details: orderDetails, detailsVisible: true };
+				}
+				return order;
+			});
 		}
 	}
 
 	function toggleDetails(orderId: number) {
+		console.log('Toggle details for order ID:', orderId);
 		const order = orders.find((order) => order.id === orderId);
+		console.log('Found order:', order);
 		if (order && !order.detailsVisible) {
 			loadOrderDetails(orderId);
 		} else {
@@ -44,7 +54,9 @@
 </svelte:head>
 
 <div class="container">
-	<button class="btn btn-secondary mt-3" on:click={navigateToAdmin}>Zurück zur Administration</button>
+	<button class="btn btn-secondary mt-3" on:click={navigateToAdmin}
+		>Zurück zur Administration</button
+	>
 	<h1>Bestellungen</h1>
 	{#if orders.length > 0}
 		<table class="table">
@@ -53,7 +65,7 @@
 					<th>Bestell-ID</th>
 					<th>Status</th>
 					<th>Erstellt am</th>
-					<th>Details</th>
+					<!-- <th>Details</th> -->
 				</tr>
 			</thead>
 			<tbody>
@@ -62,14 +74,26 @@
 						<td>{order.id}</td>
 						<td>{order.attributes.status}</td>
 						<td>{new Date(order.attributes.createdAt).toLocaleString()}</td>
+
+						<!--
+						Kommentar: Details hinfällig, da Bestellungn i.d.R. als Gast durchgeführt werden
+						
 						<td>
 							<button class="btn btn-secondary" on:click={() => toggleDetails(order.id)}
 								>Details</button
 							>
 						</td>
+						-->
 					</tr>
 					{#if order.detailsVisible}
-						<p>TO DO</p>
+						<tr>
+							<td colspan="4">
+								<h3>Adresse:</h3>
+								<ul>
+									<!-- Lieferadresse liegt bei Stripe -->
+								</ul>
+							</td>
+						</tr>
 					{/if}
 				{/each}
 			</tbody>
