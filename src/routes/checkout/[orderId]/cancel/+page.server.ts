@@ -11,16 +11,16 @@ export const load = (async ({ params }) => {
         return redirect(307, "/checkout")
     }
 
+    // Remove all order items from order
+    const response = await deleteOrderItemsFromOrder(orderId);
+    log('deleteOrderItemsFromOrder', response);
+
     // Update the order status
     if(order.order.attributes.status === 'PENDING') {
         await updateOrder(orderId, { status: 'FAILED' });
     } else {
         return redirect(307, "/checkout")
     }
-
-    // Remove all order items from order
-    const response = await deleteOrderItemsFromOrder(orderId);
-    log('deleteOrderItemsFromOrder', response);
 
     return { success: true, order }
 }) satisfies PageServerLoad;

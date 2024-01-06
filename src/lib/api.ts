@@ -103,6 +103,8 @@ export async function updateBookQuantity(id: number, newQuantity: number) {
 /* ====================================================== */
 /* ===== Order Operations =====  */
 /* ====================================================== */
+/* ===== READ =====  */
+/* ====================================================== */
 
 export async function getOrders() {
 	try {
@@ -154,40 +156,6 @@ export async function getOrderDetails(orderId: number) {
 	}
 }
 
-
-export async function deleteOrderItemsFromOrder(orderId: number) {
-	try {
-		const response = await axios.get(`${baseURL}/bookstore-orders?populate=*`, { headers });
-
-		if (response.status !== 200) {
-			log(`API => Error fetching bookstore-order-items from order ${orderId}: Bad Request`);
-			throw new Error(response.data?.error);
-		}
-
-		// Get order items from order
-		const orders = response.data?.data;
-		const order = orders.find((order: any) => order.id === orderId);
-		
-		// Get order item ids
-		let orderItemIds: number[] = [];
-		for (const orderItem of order.attributes.order_items.data) {
-			orderItemIds.push(orderItem.id);
-		}
-
-		// Delete order items
-		await Promise.all(
-			orderItemIds.map(async (orderItemId) => {
-				await axios.delete(`${baseURL}/bookstore-order-items/${orderItemId}`, { headers });
-			})
-		);
-
-		return { success: true, order };
-	} catch (error) {
-		log(`API => Error fetching bookstore-order-items from order ${orderId}: Unknown Error`);
-		throw new Error(String(error));
-	}
-}
-
 export async function isBookAvailable(bookId: number, quantity: number) : Promise<boolean> {
 	try {
 		const response = await axios.get(`${baseURL}/bookstore-books/${bookId}`, { headers });
@@ -208,6 +176,10 @@ export async function isBookAvailable(bookId: number, quantity: number) : Promis
 		throw new Error(String(error));
 	}
 }
+
+/* ====================================================== */
+/* ===== CREATE =====  */
+/* ====================================================== */
 
 export async function createOrder() {
 	try {
@@ -262,7 +234,9 @@ export async function createOrderItem(book: Book, orderId: number, quantity: num
 	}
 }
 
-
+/* ====================================================== */
+/* ===== UPDATE =====  */
+/* ====================================================== */
 
 export async function updateOrder(orderId: number, data: any) {
 	try {
@@ -281,6 +255,43 @@ export async function updateOrder(orderId: number, data: any) {
 		return { success: true, updatedOrder };
 	} catch (error) {
 		log(`API => Error updating bookstore-order with id ${orderId}: Unknown Error`);
+		throw new Error(String(error));
+	}
+}
+
+/* ====================================================== */
+/* ===== MIXED =====  */
+/* ====================================================== */
+
+export async function deleteOrderItemsFromOrder(orderId: number) {
+	try {
+		const response = await axios.get(`${baseURL}/bookstore-orders?populate=*`, { headers });
+
+		if (response.status !== 200) {
+			log(`API => Error fetching bookstore-order-items from order ${orderId}: Bad Request`);
+			throw new Error(response.data?.error);
+		}
+
+		// Get order items from order
+		const orders = response.data?.data;
+		const order = orders.find((order: any) => order.id === orderId);
+		
+		// Get order item ids
+		let orderItemIds: number[] = [];
+		for (const orderItem of order.attributes.order_items.data) {
+			orderItemIds.push(orderItem.id);
+		}
+
+		// Delete order items
+		await Promise.all(
+			orderItemIds.map(async (orderItemId) => {
+				await axios.delete(`${baseURL}/bookstore-order-items/${orderItemId}`, { headers });
+			})
+		);
+
+		return { success: true, order };
+	} catch (error) {
+		log(`API => Error fetching bookstore-order-items from order ${orderId}: Unknown Error`);
 		throw new Error(String(error));
 	}
 }

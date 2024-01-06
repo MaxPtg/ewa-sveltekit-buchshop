@@ -12,7 +12,7 @@
 
 <SlideLeftRight>
 	<div class="row">
-		<div class="col-12 mb-5">
+		<div class="col-12 mb-3">
 			<h1><i class="fas fa-book"></i> Unser Katalog</h1>
 		</div>
 	</div>

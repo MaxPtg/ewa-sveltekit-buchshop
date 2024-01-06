@@ -18,7 +18,8 @@
 		const { success, books } = await getBooks();
 		if (success) {
 			filteredBooks = books.filter((book: Book) =>
-				book.attributes.title.toLowerCase().includes($searchTerm.toLowerCase())
+				book.attributes.title.toLowerCase().includes($searchTerm.toLowerCase()) ||
+				book.attributes.author.toLowerCase().includes($searchTerm.toLowerCase())
 			);
 		}
 	}

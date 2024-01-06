@@ -10,9 +10,12 @@
 </svelte:head>
 
 <SlideLeftRight>
-	<div class="row mb-5">
+	<div class="row mb-3">
 		<div class="col-12">
-			<h1>Informationen zu {book.attributes.title}</h1>
+			<h1>
+				<i class="fa-solid fa-circle-info"></i> 
+				Informationen zu {book.attributes.title}
+			</h1>
 		</div>
 	</div>
 
@@ -23,10 +26,10 @@
 		<div class="col-md-8">
 			<h2>{book.attributes.title}</h2>
 			<p>Author: {book.attributes.author}</p>
-			<p>Price: {book.attributes.price}</p>
-			<p>Quantity: {book.attributes.quantity}</p>
+			<p>Preis: {book.attributes.price} €</p>
+			<p>Im Lager: {book.attributes.quantity}</p>
 			<p>ISBN: {book.attributes.isbn}</p>
-			<p>{book.attributes.abstract}</p>
+			<p class="pt-3">{book.attributes.abstract}</p>
 		</div>
 	</div>
 
