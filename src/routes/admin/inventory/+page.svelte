@@ -34,10 +34,6 @@
 			editingBook = null;
 		}
 	}
-
-	function navigateToAdmin() {
-		goto('/admin');
-	}
 </script>
 
 <svelte:head>

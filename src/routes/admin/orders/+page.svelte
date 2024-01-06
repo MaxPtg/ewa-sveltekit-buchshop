@@ -8,9 +8,6 @@
 	let orders: Orders = [];
 	$: orders = data.orders;
 
-	function navigateToAdmin() {
-		goto('/admin');
-	}
 </script>
 
 <svelte:head>
